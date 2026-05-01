@@ -52,10 +52,10 @@ def fill_excel_template(template_path, bill_data):
         if month in monthly_units and monthly_units[month] != "":
             ws[f"D{row}"] = clean_number(monthly_units[month])
 
-    # Safety: current month units must always go to January row
+    
     ws["D20"] = clean_number(bill_data.get("units_consumed", ""))
 
-    # Bill amount
+    
     ws["E20"] = clean_number(bill_data.get("bill_amount", ""))
 
     os.makedirs("output", exist_ok=True)
