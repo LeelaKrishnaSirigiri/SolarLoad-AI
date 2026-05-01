@@ -33,12 +33,29 @@ def fill_excel_template(template_path, bill_data):
 
     monthly_units = bill_data.get("monthly_units", {})
 
-    for row in range(9, 21):
-        month = str(ws[f"C{row}"].value).strip()
+    month_row_map = {
+        "February 2025": 9,
+        "March 2025": 10,
+        "April 2025": 11,
+        "May 2025": 12,
+        "June 2025": 13,
+        "July 2025": 14,
+        "August 2025": 15,
+        "September 2025": 16,
+        "October 2025": 17,
+        "November 2025": 18,
+        "December 2025": 19,
+        "January 2026": 20,
+    }
 
-        if month in monthly_units:
+    for month, row in month_row_map.items():
+        if month in monthly_units and monthly_units[month] != "":
             ws[f"D{row}"] = clean_number(monthly_units[month])
 
+    # Safety: current month units must always go to January row
+    ws["D20"] = clean_number(bill_data.get("units_consumed", ""))
+
+    # Bill amount
     ws["E20"] = clean_number(bill_data.get("bill_amount", ""))
 
     os.makedirs("output", exist_ok=True)
