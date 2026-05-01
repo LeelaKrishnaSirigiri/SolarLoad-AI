@@ -38,9 +38,8 @@ Upload bill → Extract data → Fill Excel → Get output instantly
 
 ## 🛠️ How to Run
 
-```bash
 pip install -r requirements.txt
-streamlit run app.py
+streamlit run app.py 
 ---
 
 ## 📂 Project Structure
