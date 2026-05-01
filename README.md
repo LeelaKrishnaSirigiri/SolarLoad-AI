@@ -41,3 +41,56 @@ Upload bill → Extract data → Fill Excel → Get output instantly
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
+---
+
+## 📂 Project Structure
+
+SolarLoad-AI/  
+│  
+├── app.py                 # Streamlit UI  
+├── extractor.py           # OCR + data extraction  
+├── excel_filler.py        # Excel automation  
+├── requirements.txt  
+├── README.md  
+
+├── input/  
+│   └── template.xlsx      # Provided Excel template  
+
+├── output/  
+│   └── .gitkeep  
+
+---
+
+## ⚠️ Notes & Assumptions
+
+- Monthly consumption history in the bill appears as a low-resolution graph with regional language labels, which makes fully automatic extraction unreliable.  
+- A manual review/edit step is included to ensure the final Excel output remains accurate.  
+- Fixed charges are defaulted when OCR cannot reliably extract them.  
+
+---
+
+## 📈 Future Improvements
+
+- Improve OCR accuracy using Google Vision API  
+- Add support for PDF bills  
+- Better extraction of monthly consumption history  
+- Support for multiple electricity boards  
+
+---
+
+## 🎥 Demo
+
+Demo Video: [PASTE YOUR VIDEO LINK HERE]
+
+---
+
+## 🎯 Outcome
+
+This system reduces manual effort from 15–30 minutes to under 1 minute per bill, while maintaining accuracy through a review step.
+
+---
+
+## 👤 Author
+
+Leela Krishna  
+AI Intern Task Submission — Energybae
