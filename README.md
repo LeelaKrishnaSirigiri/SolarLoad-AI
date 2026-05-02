@@ -2,7 +2,7 @@
 
 This project automates the process of converting electricity bill data into a solar load calculation Excel sheet.
 
-## 🚀 Overview
+##  Overview
 
 Energybae currently analyzes electricity bills manually to calculate solar system requirements. This tool automates that workflow:
 
@@ -10,7 +10,7 @@ Upload bill → Extract data → Fill Excel → Get output instantly
 
 ---
 
-## 🧠 What it does
+## What it does
 
 - Upload MSEDCL electricity bill (image)
 - Extract key fields using OCR:
@@ -26,7 +26,7 @@ Upload bill → Extract data → Fill Excel → Get output instantly
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 - Python
 - Streamlit (UI)
@@ -42,7 +42,7 @@ Upload bill → Extract data → Fill Excel → Get output instantly
 - streamlit run app.py 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 SolarLoad-AI/  
 │  
@@ -60,7 +60,7 @@ SolarLoad-AI/
 
 ---
 
-## ⚠️ Notes & Assumptions
+##  Notes & Assumptions
 
 - Monthly consumption history in the bill appears as a low-resolution graph with regional language labels, which makes fully automatic extraction unreliable.  
 - A manual review/edit step is included to ensure the final Excel output remains accurate.  
@@ -68,7 +68,7 @@ SolarLoad-AI/
 
 ---
 
-## 📈 Future Improvements
+##  Future Improvements
 
 - Improve OCR accuracy using Google Vision API  
 - Add support for PDF bills  
@@ -77,19 +77,14 @@ SolarLoad-AI/
 
 ---
 
-## 🎥 Demo
 
-Demo Video: [PASTE YOUR VIDEO LINK HERE]
-
----
-
-## 🎯 Outcome
+##  Outcome
 
 This system reduces manual effort from 15–30 minutes to under 1 minute per bill, while maintaining accuracy through a review step.
 
 ---
 
-## 👤 Author
+## Author
 
 Leela Krishna  
 AI Intern Task Submission — Energybae
