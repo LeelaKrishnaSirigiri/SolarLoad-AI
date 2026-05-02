@@ -1,4 +1,4 @@
-# ☀️ SolarLoad AI — Electricity Bill to Solar Load Automation
+#  SolarLoad AI — Electricity Bill to Solar Load Automation
 
 This project automates the process of converting electricity bill data into a solar load calculation Excel sheet.
 
