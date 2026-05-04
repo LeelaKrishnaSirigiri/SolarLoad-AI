@@ -10,9 +10,16 @@ pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 def load_image(uploaded_file):
     uploaded_file.seek(0)
     image = Image.open(uploaded_file).convert("RGB")
+
+    
+    max_width = 1200
+    if image.width > max_width:
+        ratio = max_width / image.width
+        new_height = int(image.height * ratio)
+        image = image.resize((max_width, new_height))
+
     return cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-
-
+    
 def crop(img, x1, y1, x2, y2):
     h, w = img.shape[:2]
     return img[int(h * y1):int(h * y2), int(w * x1):int(w * x2)]
@@ -20,17 +27,14 @@ def crop(img, x1, y1, x2, y2):
 
 def preprocess(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
-    gray = cv2.bilateralFilter(gray, 9, 75, 75)
 
-    return cv2.adaptiveThreshold(
-        gray,
-        255,
-        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY,
-        31,
-        11
-    )
+    
+    gray = cv2.resize(gray, None, fx=1.3, fy=1.3, interpolation=cv2.INTER_LINEAR)
+
+   
+    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
+
+    return thresh
 
 
 def ocr(img, psm=6):
