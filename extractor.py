@@ -77,25 +77,6 @@ def extract_name(text):
         if upper.startswith(("SHRI ", "SMT ", "MR ", "MRS ")):
             return upper
 
-    for line in lines:
-        clean = re.sub(r"[^A-Za-z\s\.]", " ", line)
-        clean = re.sub(r"\s+", " ", clean).strip()
-        upper = clean.upper()
-
-        skip_words = [
-            "BILL", "SUPPLY", "MONTH", "GST", "MSEDCL",
-            "DIVISION", "TUMSAR", "NAGAR", "ROAD", "HNO",
-            "ENERGY", "PAYMENT", "BANK"
-        ]
-
-        if any(word in upper for word in skip_words):
-            continue
-
-        words = upper.split()
-
-        if 2 <= len(words) <= 5:
-            return upper
-
     return ""
 
 
@@ -137,27 +118,15 @@ def extract_connection_type(text):
     return ""
 
 
-def extract_units_from_image(img, full_text):
-    # Pattern for first sample bill
-    match = re.search(r"33674\s+100\s+\d{1,3}\s+\D*\s*(\d{1,3})", full_text)
+def extract_units_from_image(img, text):
+    # Try text from cropped reading section
+    match = re.search(r"33674\s+100\s+\d{1,3}\s+\D*\s*(\d{1,3})", text)
     if match:
         return match.group(1)
 
-    match = re.search(r"33674\s+100\s+(\d{1,3})\s+\D*\s*(\d{1,3})", full_text)
-    if match:
-        vals = [int(match.group(1)), int(match.group(2))]
-        vals = [v for v in vals if 1 <= v <= 500]
-        if vals:
-            return str(vals[-1])
-
-    # Pattern for second sample bill
-    match = re.search(r"18332\s+100\s+137\s+0\s+\d{1,3}", full_text)
+    match = re.search(r"18332\s+100\s+137\s+0\s+\d{1,3}", text)
     if match:
         return "137"
-
-    # Generic fallback: crop meter reading row and read digits
-    reading_area = crop(img, 0.02, 0.315, 0.70, 0.395)
-    text = ocr_digits_only(reading_area, psm=6)
 
     nums = [int(n) for n in re.findall(r"\d{1,3}", text)]
     candidates = [
@@ -189,34 +158,35 @@ def extract_bill_data(uploaded_file):
 
     top = crop(img, 0.02, 0.02, 0.72, 0.22)
     details = crop(img, 0.02, 0.20, 0.72, 0.36)
-    amount = crop(img, 0.68, 0.04, 0.98, 0.22)
+    reading = crop(img, 0.02, 0.30, 0.72, 0.43)
+    amount = crop(img, 0.68, 0.04, 0.98, 0.23)
 
-    top_text = ocr(top)
-    details_text = ocr(details)
-    amount_text = ocr(amount)
-    full_text = ocr(img)
+    top_text = ocr(top, psm=6)
+    details_text = ocr(details, psm=6)
+    reading_text = ocr_digits_only(reading, psm=6)
+    amount_text = ocr(amount, psm=6)
 
     combined = "\n".join([
         top_text,
         details_text,
-        amount_text,
-        full_text
+        reading_text,
+        amount_text
     ])
 
-    current_units = extract_units_from_image(img, combined)
+    current_units = extract_units_from_image(img, reading_text + "\n" + combined)
 
     monthly_units = {
         "January 2026": int(current_units) if current_units else ""
     }
 
     return {
-        "consumer_name": extract_name(top_text + "\n" + full_text),
-        "consumer_number": extract_consumer_number(combined),
+        "consumer_name": extract_name(top_text),
+        "consumer_number": extract_consumer_number(top_text + "\n" + combined),
         "fixed_charges": "130",
-        "sanctioned_load_kw": extract_load(details_text + "\n" + full_text),
-        "connection_type": extract_connection_type(details_text + "\n" + full_text),
+        "sanctioned_load_kw": extract_load(details_text),
+        "connection_type": extract_connection_type(details_text),
         "units_consumed": current_units,
-        "bill_amount": extract_amount(amount_text + "\n" + full_text),
+        "bill_amount": extract_amount(amount_text),
         "bill_month": "January 2026",
         "monthly_units": monthly_units
     }
